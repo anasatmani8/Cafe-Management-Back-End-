@@ -1,7 +1,6 @@
 package atmani.model;
 
 import java.io.Serializable;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,9 +14,9 @@ import lombok.Data;
 @NamedQuery(name="User.findByEmail", query = "select u from User u where u.email =:email")
 
 @Data
-@Entity
+@Entity //password
 @Table(name="user") // GITHUB1anas
-public class User implements Serializable {
+public class User implements Serializable {  
 	
 	private static final long serialVersionUID = 1L;
 	
