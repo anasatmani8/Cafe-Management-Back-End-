@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 
 
+
 @SuppressWarnings("deprecation")
 @Configuration
 @EnableWebSecurity
@@ -50,9 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// TODO Auto-generated method stub
 		http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
 				.and()
-				.csrf().disable()
-				.authorizeRequests()
-				.requestMatchers  ("/user/login", "/login/signup", "/user/forgetPassword")
+				.csrf().disable().authorizeRequests().antMatchers("/user/login", "/login/signup", "/user/forgetPassword")
 				.permitAll()
 				.anyRequest()
 				.authenticated()
@@ -64,5 +63,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 	
-	
+			
 }
