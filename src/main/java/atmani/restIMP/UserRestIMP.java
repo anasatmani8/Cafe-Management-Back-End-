@@ -29,4 +29,15 @@ public class UserRestIMP implements atmani.restController.UserRest {
 		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@Override
+	public ResponseEntity<String> Login(Map<String, String> requestMap) {
+		// TODO Auto-generated method stub
+		try {
+			return userService.login(requestMap);
+		}catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 }

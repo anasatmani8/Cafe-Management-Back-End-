@@ -3,11 +3,17 @@ package atmani.servicesIMP;
 import java.util.Map;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
+import atmani.JWT.CustomerUsersDetailsService;
+import atmani.JWT.JwtUtil;
 import atmani.constents.CafeConstants;
 import atmani.dao.UserDao;
 import atmani.model.User;
@@ -22,29 +28,41 @@ public class UserServiceIMP implements UserService {
 	@Autowired
 	UserDao userDao;
 
+	@Autowired
+	AuthenticationManager authenticationManager;
+
+	@Autowired
+	CustomerUsersDetailsService customerUsersDetailsService;
+
+	@Autowired
+	JwtUtil jwtUtil;
+
+	Logger log = (Logger) LoggerFactory.getLogger(UserServiceIMP.class);
+
 	@Override
 	public ResponseEntity<String> signUp(Map<String, String> requestMap) {
 		// TODO Auto-generated method stub
+		log.info("Inside signup / ", requestMap);
 		System.out.printf("Inside signup / ", requestMap);
-		
-		try { 
-		if (validateSignUp(requestMap)) {
-			User user = userDao.findByEmail(requestMap.get("email"));
-			if (Objects.isNull(user)) {
-				userDao.save(getUserFromMap(requestMap));
-				return CafeUtils.getResponseEntity("Successfully registred", HttpStatus.OK);
+
+		try {
+			if (validateSignUp(requestMap)) {
+				User user = userDao.findByEmail(requestMap.get("email"));
+				if (Objects.isNull(user)) {
+					userDao.save(getUserFromMap(requestMap));
+					return CafeUtils.getResponseEntity("Successfully registred", HttpStatus.OK);
+				} else {
+					return CafeUtils.getResponseEntity("Email already exits", HttpStatus.BAD_REQUEST);
+				}
+
 			} else {
-				return CafeUtils.getResponseEntity("Email already exits", HttpStatus.BAD_REQUEST);
+
+				return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
 			}
-
-		} else {
-
-			return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
-		}
-		}catch (Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 
@@ -65,6 +83,34 @@ public class UserServiceIMP implements UserService {
 		user.setStatus(requeMap.get("status"));
 		user.setRole(requeMap.get("role"));
 		return user;
+	}
+
+	@Override
+	public ResponseEntity<String> login(Map<String, String> requestMap) {
+		// TODO Auto-generated method stub
+		System.out.println("Inside login 1");
+		log.info("Inside login 2");	
+		try {
+			Authentication auth = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(requestMap.get("email"), requestMap.get("password")));
+			if (auth.isAuthenticated()) {
+				if (customerUsersDetailsService.getUserDetail().getStatus().equalsIgnoreCase("true")) {
+					return new ResponseEntity<String>(
+							"{\"token\":\""
+									+ jwtUtil.generateToken(customerUsersDetailsService.getUserDetail().getEmail(),
+											customerUsersDetailsService.getUserDetail().getRole())+ "\"}",
+							HttpStatus.OK);
+				} else {
+					return new ResponseEntity<String>("{\"message\":\"" + "Wait for admin aproval." + "\"}",
+							HttpStatus.BAD_REQUEST);
+				} 
+			}
+
+		} catch (Exception ex) {
+			//	log.error("{}", ex);
+			 ex.printStackTrace();
+		}
+		return new ResponseEntity<String>("{\"message\":\"" + "Bad Credentials." + "\"}", HttpStatus.BAD_REQUEST);
 	}
 
 }
