@@ -30,8 +30,8 @@ public class User implements Serializable {
 	@Column(name="name")
 	private String name;
 	
-	@Column(name="conctactnumber")
-	private String conctactnumber;
+	@Column(name="contactNumber")
+	private String contactNumber;
 	
 	@Column(name="email")
 	private String email;
@@ -62,11 +62,11 @@ public class User implements Serializable {
 	}
 
 	public String getConctactnumber() {
-		return conctactnumber;
+		return contactNumber;
 	}
 
-	public void setConctactnumber(String conctactnumber) {
-		this.conctactnumber = conctactnumber;
+	public void setConctactnumber(String contactNumber) {
+		this.contactNumber = contactNumber;
 	}
 
 	public String getEmail() {

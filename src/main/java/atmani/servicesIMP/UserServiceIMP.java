@@ -1,7 +1,10 @@
 package atmani.servicesIMP;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +16,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import atmani.JWT.CustomerUsersDetailsService;
+import atmani.JWT.JwtFilter;
 import atmani.JWT.JwtUtil;
 import atmani.constents.CafeConstants;
 import atmani.dao.UserDao;
 import atmani.model.User;
 import atmani.services.UserService;
 import atmani.utils.CafeUtils;
+import atmani.wrapper.UserWrapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j // Login purpose
@@ -36,6 +41,9 @@ public class UserServiceIMP implements UserService {
 
 	@Autowired
 	JwtUtil jwtUtil;
+
+	@Autowired
+	JwtFilter jwtFilter;
 
 	Logger log = (Logger) LoggerFactory.getLogger(UserServiceIMP.class);
 
@@ -67,7 +75,7 @@ public class UserServiceIMP implements UserService {
 	}
 
 	private boolean validateSignUp(Map<String, String> requestMap) {
-		if (requestMap.containsKey("name") && requestMap.containsKey("contactnumber") && requestMap.containsKey("email")
+		if (requestMap.containsKey("name") && requestMap.containsKey("contactNumber") && requestMap.containsKey("email")
 				&& requestMap.containsKey("password")) {
 			return true;
 		}
@@ -78,7 +86,7 @@ public class UserServiceIMP implements UserService {
 		User user = new User();
 		user.setName(requeMap.get("name"));
 		user.setEmail(requeMap.get("email"));
-		user.setConctactnumber(requeMap.get("contactnumber"));
+		user.setConctactnumber(requeMap.get("contactNumber"));
 		user.setPassword(requeMap.get("password"));
 		user.setStatus(requeMap.get("status"));
 		user.setRole(requeMap.get("role"));
@@ -89,28 +97,49 @@ public class UserServiceIMP implements UserService {
 	public ResponseEntity<String> login(Map<String, String> requestMap) {
 		// TODO Auto-generated method stub
 		System.out.println("Inside login 1");
-		log.info("Inside login 2");	
+		log.info("Inside login 2");
 		try {
 			Authentication auth = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(requestMap.get("email"), requestMap.get("password")));
 			if (auth.isAuthenticated()) {
 				if (customerUsersDetailsService.getUserDetail().getStatus().equalsIgnoreCase("true")) {
+					log.info("login ok");
 					return new ResponseEntity<String>(
 							"{\"token\":\""
 									+ jwtUtil.generateToken(customerUsersDetailsService.getUserDetail().getEmail(),
-											customerUsersDetailsService.getUserDetail().getRole())+ "\"}",
+											customerUsersDetailsService.getUserDetail().getRole())
+									+ "\"}",
 							HttpStatus.OK);
+					
 				} else {
 					return new ResponseEntity<String>("{\"message\":\"" + "Wait for admin aproval." + "\"}",
 							HttpStatus.BAD_REQUEST);
-				} 
+				}
 			}
 
 		} catch (Exception ex) {
-			//	log.error("{}", ex);
-			 ex.printStackTrace();
+			// log.error("{}", ex);
+			ex.printStackTrace();
 		}
 		return new ResponseEntity<String>("{\"message\":\"" + "Bad Credentials." + "\"}", HttpStatus.BAD_REQUEST);
+	}
+
+	@Override
+	public ResponseEntity<List<UserWrapper>> getAllUser() {
+		// TODO Auto-generated method stub
+		System.out.println("inside /get");
+		System.out.println(customerUsersDetailsService.getUserDetail().getRole()+" role");
+		try {
+			if (jwtFilter.isAdmin()) {
+				return new ResponseEntity<>(userDao.getAllUser(), HttpStatus.OK);
+			} else {
+				System.out.println("forbidden");
+				return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
