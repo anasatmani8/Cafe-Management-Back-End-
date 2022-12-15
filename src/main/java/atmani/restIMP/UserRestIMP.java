@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import atmani.constents.CafeConstants;
+import atmani.model.User;
 import atmani.services.UserService;
 import atmani.utils.CafeUtils;
-import atmani.wrapper.UserWrapper;
 
 
 @RestController
@@ -45,7 +45,7 @@ public class UserRestIMP implements atmani.restController.UserRest {
 	}
 
 	@Override
-	public ResponseEntity<List<UserWrapper>> getAllUser() {
+	public ResponseEntity<List<User>> getAllUser() {
 		// TODO Auto-generated method stub
 		System.out.println("inside rest ");
 		try {
@@ -55,7 +55,7 @@ public class UserRestIMP implements atmani.restController.UserRest {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return new ResponseEntity<List<UserWrapper>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<List<User>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import atmani.model.User;
 
-import atmani.wrapper.UserWrapper;
 
 public interface UserService {
 
@@ -14,6 +14,6 @@ public interface UserService {
 	
 	ResponseEntity<String> login(Map<String, String> requestMap);
 	
-	ResponseEntity<List<UserWrapper>> getAllUser();
+	ResponseEntity<List<User>> getAllUser();
 
 }

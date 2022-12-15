@@ -22,10 +22,9 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Autowired
 	JwtUtil jwtUtil;
 
-	Claims claims ;
+	Claims claims;
 	private String username;
-	
-	String claims2;
+
 
 	@Autowired
 	CustomerUsersDetailsService service;
@@ -35,12 +34,14 @@ public class JwtFilter extends OncePerRequestFilter {
 			FilterChain filterChain) throws ServletException, IOException {
 		System.out.println("inside filter");
 
-		if (httpServletRequest.getServletPath().matches("/user/login|/user/forgetPassword|/user/signup|/user/get")) {
-			System.out.println("dofilter1");
-			String authorizationHeader = httpServletRequest.getHeader("Authorization");
-			String token = authorizationHeader.substring(7);
-			claims = jwtUtil.extractAllClaims(token);
-			System.out.println(claims+" filter1");
+		if (httpServletRequest.getServletPath().matches("/user/login|/user/forgetPassword|/user/signup")) {
+			/*
+			 * System.out.println("dofilter1"); String authorizationHeader =
+			 * httpServletRequest.getHeader("Authorization");
+			 * System.out.println(authorizationHeader); String token =
+			 * authorizationHeader.substring(7); claims = jwtUtil.extractAllClaims(token);
+			 * System.out.println(claims+" filter1");
+			 */
 			filterChain.doFilter(httpServletRequest, httpServletResponse);
 		} else {
 			String authorizationHeader = httpServletRequest.getHeader("Authorization");
@@ -50,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
 				token = authorizationHeader.substring(7);
 				username = jwtUtil.extractUsername(token); // extractUsername
 				claims = jwtUtil.extractAllClaims(token);
-				System.out.println(claims+"claims");
+				System.out.println(claims + "claims");
 
 			}
 
@@ -67,17 +68,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
 			}
 			filterChain.doFilter(httpServletRequest, httpServletResponse);
-			
+
 		}
 
 	}
-	
 
 	public boolean isAdmin() {
-		System.out.println("admin OK");
-		System.out.println(claims+" claims");
+		System.out.println("test admin OK");
+		System.out.println(claims + " claims");
 		return "admin".equalsIgnoreCase((String) claims.get("role"));
-		
+
 	}
 
 	public boolean isUser() {

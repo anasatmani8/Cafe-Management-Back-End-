@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import atmani.wrapper.UserWrapper;
+import atmani.model.User;
+
 
 @RequestMapping(path="/user")    
 public interface UserRest {
@@ -21,6 +22,6 @@ public interface UserRest {
 	public ResponseEntity<String> Login(@RequestBody(required = true) Map<String, String> requestMap);
 	
 	@GetMapping(path="/get")
-	public ResponseEntity<List<UserWrapper>> getAllUser();
+	public ResponseEntity<List<User>> getAllUser();
 
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import atmani.dao.UserDao;
 import atmani.model.User;
 import atmani.services.UserService;
 import atmani.utils.CafeUtils;
-import atmani.wrapper.UserWrapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j // Login purpose
@@ -110,7 +108,7 @@ public class UserServiceIMP implements UserService {
 											customerUsersDetailsService.getUserDetail().getRole())
 									+ "\"}",
 							HttpStatus.OK);
-					
+
 				} else {
 					return new ResponseEntity<String>("{\"message\":\"" + "Wait for admin aproval." + "\"}",
 							HttpStatus.BAD_REQUEST);
@@ -125,13 +123,13 @@ public class UserServiceIMP implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<List<UserWrapper>> getAllUser() {
+	public ResponseEntity<List<User>> getAllUser() {
 		// TODO Auto-generated method stub
 		System.out.println("inside /get");
-		System.out.println(customerUsersDetailsService.getUserDetail().getRole()+" role");
+		System.out.println(customerUsersDetailsService.getUserDetail().getRole() + " role");
 		try {
-			if (jwtFilter.isAdmin()) {
-				return new ResponseEntity<>(userDao.getAllUser(), HttpStatus.OK);
+			if (customerUsersDetailsService.getUserDetail().getRole().equalsIgnoreCase("admin")) {
+				return new ResponseEntity<List<User>>(userDao.getAllUser(), HttpStatus.OK);
 			} else {
 				System.out.println("forbidden");
 				return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
