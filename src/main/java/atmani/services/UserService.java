@@ -16,4 +16,6 @@ public interface UserService {
 	
 	ResponseEntity<List<User>> getAllUser();
 
+	ResponseEntity<String> update(Map<String, String> requestMap);
+
 }

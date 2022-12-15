@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,7 @@ import atmani.dao.UserDao;
 import atmani.model.User;
 import atmani.services.UserService;
 import atmani.utils.CafeUtils;
+import atmani.utils.EmailUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j // Login purpose
@@ -43,6 +44,9 @@ public class UserServiceIMP implements UserService {
 	@Autowired
 	JwtFilter jwtFilter;
 
+	@Autowired
+	EmailUtils emailUtils;
+
 	Logger log = (Logger) LoggerFactory.getLogger(UserServiceIMP.class);
 
 	@Override
@@ -62,7 +66,7 @@ public class UserServiceIMP implements UserService {
 				}
 
 			} else {
-
+				System.out.println("invalid data");
 				return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception ex) {
@@ -86,8 +90,8 @@ public class UserServiceIMP implements UserService {
 		user.setEmail(requeMap.get("email"));
 		user.setConctactnumber(requeMap.get("contactNumber"));
 		user.setPassword(requeMap.get("password"));
-		user.setStatus(requeMap.get("status"));
-		user.setRole(requeMap.get("role"));
+		user.setStatus("false");
+		user.setRole("user");
 		return user;
 	}
 
@@ -138,6 +142,41 @@ public class UserServiceIMP implements UserService {
 			ex.printStackTrace();
 		}
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@Override
+	public ResponseEntity<String> update(Map<String, String> requestMap) {
+		// TODO Auto-generated method stub
+		try { //
+			if (customerUsersDetailsService.getUserDetail().getRole().equalsIgnoreCase("admin")) {
+				Optional<User> optional = userDao.findById(Integer.parseInt(requestMap.get("id")));
+				if (!Objects.isNull(optional)) {
+					userDao.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
+					sendMailToAllAdmin(requestMap.get("status"), optional.get().getEmail()/*, userDao.getAllAdmin()*/);
+					return CafeUtils.getResponseEntity("User status updated successfully", HttpStatus.OK);
+				} else {
+					return CafeUtils.getResponseEntity("User id does not exist", HttpStatus.OK);
+				}
+			} else {
+				return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	private void sendMailToAllAdmin(String status, String user/*, List<String> allAdmin*/) {
+		//allAdmin.remove(jwtFilter.getCurrentUser());
+		if (status != null && status.equalsIgnoreCase("true")) {
+			emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account aprouved",
+					"User:- " + user + "\n is approved by \nADMIN:-" + jwtFilter.getCurrentUser()/*, allAdmin*/);
+		}else {
+			emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account disabled",
+					"User:- " + user + "\n is disabled by \nADMIN:-" + jwtFilter.getCurrentUser()/*, allAdmin*/);
+		}
+
 	}
 
 }

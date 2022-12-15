@@ -47,7 +47,7 @@ public class UserRestIMP implements atmani.restController.UserRest {
 	@Override
 	public ResponseEntity<List<User>> getAllUser() {
 		// TODO Auto-generated method stub
-		System.out.println("inside rest ");
+		System.out.println("inside rest allUser");
 		try {
 			
 			return userService.getAllUser();
@@ -56,6 +56,17 @@ public class UserRestIMP implements atmani.restController.UserRest {
 			ex.printStackTrace();
 		}
 		return new ResponseEntity<List<User>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@Override
+	public ResponseEntity<String> Update(Map<String, String> requestMap) {
+		// TODO Auto-generated method stub
+		try {
+			return userService.update(requestMap);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
