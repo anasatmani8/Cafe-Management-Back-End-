@@ -1,6 +1,6 @@
 package atmani.utils;
 
-//import java.util.List;
+import java.util.List;
 //import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,18 +17,24 @@ public class EmailUtils {
 	@Autowired
 	public JavaMailSenderImpl mailSssss = new JavaMailSenderImpl();
 
-	public void sendSimpleMessage(String to, String subject, String text/* , List<String> list */) {
-		SimpleMailMessage message = new SimpleMailMessage(); 
-        message.setFrom("anasatmani8@gmail.com");
-        message.setTo("tom5566@mailinator.com"); 
-        message.setSubject(subject); 
-        message.setText(text);
-        emailSender.send(message);
-		/*
-		 * if(list != null && list.size() > 0) message.setCc(getCcArray(list));
-		 * message.setCc(getCcArray(list));
-		 */
-		
+	public void sendSimpleMessage(String subject, String text, List<String> list) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom("anasatmani8@gmail.com");
+
+		message.setSubject(subject);
+		message.setText(text);
+		if (list != null && list.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				String To = list.get(i);
+				System.out.println(To);
+				message.setTo(To);
+			}
+
+		}
+		System.out.println(list.toString());
+		// message.setCc(getCcArray(list));
+
+		emailSender.send(message);
 	}
 
 	/*

@@ -21,7 +21,7 @@ public interface UserDao extends JpaRepository<User, Integer> {
 	@Query(value = "SELECT * FROM cafesystem.user where role=\"user\";", nativeQuery = true)
 	List<User> getAllUser();
 	
-	@Query(value = "SELECT * FROM cafesystem.user where role=\"admin\";", nativeQuery = true)
+	@Query(value = "SELECT email FROM cafesystem.user where role=\"admin\";", nativeQuery = true)
 	List<String> getAllAdmin();
 	
 	@Modifying

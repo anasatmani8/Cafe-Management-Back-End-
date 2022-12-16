@@ -152,7 +152,11 @@ public class UserServiceIMP implements UserService {
 				Optional<User> optional = userDao.findById(Integer.parseInt(requestMap.get("id")));
 				if (!Objects.isNull(optional)) {
 					userDao.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
-					sendMailToAllAdmin(requestMap.get("status"), optional.get().getEmail()/*, userDao.getAllAdmin()*/);
+					System.out.println(requestMap.get("status")+" status");
+					System.out.println(optional.get().getEmail()+" modified user");
+					System.out.println(customerUsersDetailsService.getUserDetail().getEmail()+" who made the operation");
+					sendMailToAllAdmin(customerUsersDetailsService.getUserDetail().getEmail(), requestMap.get("status"), optional.get().getEmail(),
+							userDao.getAllAdmin());
 					return CafeUtils.getResponseEntity("User status updated successfully", HttpStatus.OK);
 				} else {
 					return CafeUtils.getResponseEntity("User id does not exist", HttpStatus.OK);
@@ -167,14 +171,14 @@ public class UserServiceIMP implements UserService {
 		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	private void sendMailToAllAdmin(String status, String user/*, List<String> allAdmin*/) {
-		//allAdmin.remove(jwtFilter.getCurrentUser());
+	private void sendMailToAllAdmin(String from, String status, String user, List<String> allAdmin) {
+		allAdmin.remove(from);
 		if (status != null && status.equalsIgnoreCase("true")) {
-			emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account aprouved",
-					"User:- " + user + "\n is approved by \nADMIN:-" + jwtFilter.getCurrentUser()/*, allAdmin*/);
-		}else {
-			emailUtils.sendSimpleMessage(jwtFilter.getCurrentUser(), "Account disabled",
-					"User:- " + user + "\n is disabled by \nADMIN:-" + jwtFilter.getCurrentUser()/*, allAdmin*/);
+			emailUtils.sendSimpleMessage("Account aprouved", "User:- " + user + "\n is approved by \nADMIN:-" + from,
+					allAdmin);
+		} else {
+			emailUtils.sendSimpleMessage("Account disabled", "User:- " + user + "\n is disabled by \nADMIN:-" + from,
+					allAdmin);
 		}
 
 	}
