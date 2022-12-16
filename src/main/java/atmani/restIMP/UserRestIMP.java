@@ -13,21 +13,20 @@ import atmani.model.User;
 import atmani.services.UserService;
 import atmani.utils.CafeUtils;
 
-
 @RestController
 public class UserRestIMP implements atmani.restController.UserRest {
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Override
 	public ResponseEntity<String> Signup(Map<String, String> requestMap) {
 		// TODO Auto-generated method stub
-		
+
 		try {
 			return this.userService.signUp(requestMap);
-			
-		}catch(Exception ex) {
+
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -38,7 +37,7 @@ public class UserRestIMP implements atmani.restController.UserRest {
 		// TODO Auto-generated method stub
 		try {
 			return userService.login(requestMap);
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -49,9 +48,9 @@ public class UserRestIMP implements atmani.restController.UserRest {
 		// TODO Auto-generated method stub
 		System.out.println("inside rest allUser");
 		try {
-			
+
 			return userService.getAllUser();
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -63,6 +62,27 @@ public class UserRestIMP implements atmani.restController.UserRest {
 		// TODO Auto-generated method stub
 		try {
 			return userService.update(requestMap);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@Override
+	public ResponseEntity<String> checkToken() {
+		try {
+			return userService.checkToken();
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@Override
+	public ResponseEntity<String> changePassword(Map<String, String> requestMap) {
+		try {
+			return userService.changePassword(requestMap);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -152,11 +152,12 @@ public class UserServiceIMP implements UserService {
 				Optional<User> optional = userDao.findById(Integer.parseInt(requestMap.get("id")));
 				if (!Objects.isNull(optional)) {
 					userDao.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
-					System.out.println(requestMap.get("status")+" status");
-					System.out.println(optional.get().getEmail()+" modified user");
-					System.out.println(customerUsersDetailsService.getUserDetail().getEmail()+" who made the operation");
-					sendMailToAllAdmin(customerUsersDetailsService.getUserDetail().getEmail(), requestMap.get("status"), optional.get().getEmail(),
-							userDao.getAllAdmin());
+					System.out.println(requestMap.get("status") + " status");
+					System.out.println(optional.get().getEmail() + " modified user");
+					System.out.println(
+							customerUsersDetailsService.getUserDetail().getEmail() + " who made the operation");
+					sendMailToAllAdmin(customerUsersDetailsService.getUserDetail().getEmail(), requestMap.get("status"),
+							optional.get().getEmail(), userDao.getAllAdmin());
 					return CafeUtils.getResponseEntity("User status updated successfully", HttpStatus.OK);
 				} else {
 					return CafeUtils.getResponseEntity("User id does not exist", HttpStatus.OK);
@@ -181,6 +182,39 @@ public class UserServiceIMP implements UserService {
 					allAdmin);
 		}
 
+	}
+
+	@Override
+	public ResponseEntity<String> checkToken() {
+
+		return CafeUtils.getResponseEntity("true", HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<String> changePassword(Map<String, String> requestMap) {
+		// TODO Auto-generated method stub
+		try {
+			System.out
+					.println(customerUsersDetailsService.getUserDetail().getEmail() + " the email of the current user");
+			User userObj = userDao.findByEmail(customerUsersDetailsService.getUserDetail().getEmail());
+			System.out.println("1");
+			System.out.println(userObj.getEmail());
+			if (!userObj.equals(null)) {
+				System.out.println(userObj.getPassword() + " old password \n" + requestMap.get("oldPassword")
+						+ " oldPassword \n" + requestMap.get("newPassword") + " newPassword");
+				if (userObj.getPassword().equals(requestMap.get("oldPassword"))) {
+					System.out.println("2");
+					userObj.setPassword(requestMap.get("newPassword"));
+					userDao.save(userObj);
+					return CafeUtils.getResponseEntity("Password updated successfully", HttpStatus.OK);
+				}
+				return CafeUtils.getResponseEntity("Incorrect old password", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
