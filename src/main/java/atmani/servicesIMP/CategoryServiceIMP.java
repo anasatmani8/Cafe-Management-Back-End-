@@ -1,5 +1,7 @@
 package atmani.servicesIMP;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import atmani.JWT.CustomerUsersDetailsService;
 import atmani.JWT.JwtFilter;
 import atmani.JWT.JwtUtil;
@@ -76,6 +77,16 @@ public class CategoryServiceIMP implements CategoryService {
 		category.setName(requestMap.get("name"));
 		System.out.println(requestMap.get("name"));
 		return category;
+	}
+
+	@Override
+	public ResponseEntity<List<Category>> getAllCategory() {
+		try {
+			return new ResponseEntity<List<Category>>(categoryDao.findAll(), HttpStatus.OK);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
