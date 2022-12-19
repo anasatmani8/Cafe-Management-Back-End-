@@ -19,4 +19,7 @@ public interface CategoryRest {
 	
 	@GetMapping(path="/get")
 	public ResponseEntity<List<Category>> get();
+	
+	@PostMapping(path="/update")
+	public ResponseEntity<String> updateCategory(@RequestBody(required = true) Map<String, String> requeMap);
 }

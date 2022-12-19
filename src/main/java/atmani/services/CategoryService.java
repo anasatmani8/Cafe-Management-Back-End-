@@ -13,4 +13,6 @@ public interface CategoryService {
 
 	ResponseEntity<List<Category>> getAllCategory();
 
+	ResponseEntity<String> updateCategery(Map<String, String> requestMap);
+
 }

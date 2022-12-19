@@ -153,7 +153,7 @@ public class UserServiceIMP implements UserService {
 		try { //
 			if (customerUsersDetailsService.getUserDetail().getRole().equalsIgnoreCase("admin")) {
 				Optional<User> optional = userDao.findById(Integer.parseInt(requestMap.get("id")));
-				if (!Objects.isNull(optional)) {
+				if (optional.isPresent() == true) {
 					userDao.updateStatus(requestMap.get("status"), Integer.parseInt(requestMap.get("id")));
 					System.out.println(requestMap.get("status") + " status");
 					System.out.println(optional.get().getEmail() + " modified user");
