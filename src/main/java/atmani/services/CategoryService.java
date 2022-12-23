@@ -11,7 +11,7 @@ public interface CategoryService {
 
 	ResponseEntity<String> addNewCategory(Map<String, String> requestMap);
 
-	ResponseEntity<List<Category>> getAllCategory();
+	ResponseEntity<List<Category>> getAllCategory(String filterValue);
 
 	ResponseEntity<String> updateCategery(Map<String, String> requestMap);
 

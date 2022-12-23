@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Strings;
+
 import atmani.JWT.CustomerUsersDetailsService;
 import atmani.JWT.JwtFilter;
 import atmani.JWT.JwtUtil;
@@ -81,8 +84,14 @@ public class CategoryServiceIMP implements CategoryService {
 	}
 
 	@Override
-	public ResponseEntity<List<Category>> getAllCategory() {
+	public ResponseEntity<List<Category>> getAllCategory(String filterValue) {
 		try {
+
+			if (!Strings.isNullOrEmpty(filterValue)) {
+				log.info("param detected");
+				return new ResponseEntity<List<Category>>(categoryDao.getAllCategories(), HttpStatus.OK);
+			}
+			log.info(" no param detected");
 			return new ResponseEntity<List<Category>>(categoryDao.findAll(), HttpStatus.OK);
 		} catch (Exception ex) {
 			ex.printStackTrace();

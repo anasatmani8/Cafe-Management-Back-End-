@@ -32,9 +32,9 @@ public class CategoryRestIMP implements CategoryRest {
 	}
 
 	@Override
-	public ResponseEntity<List<Category>> get() {
+	public ResponseEntity<List<Category>> get(String filterValue) {
 		try {
-			return categoryService.getAllCategory();
+			return categoryService.getAllCategory(filterValue);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

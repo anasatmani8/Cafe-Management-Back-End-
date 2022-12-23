@@ -1,5 +1,7 @@
 package atmani.servicesIMP;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import atmani.model.Product;
 import atmani.services.ProductService;
 import atmani.utils.CafeUtils;
 import atmani.utils.EmailUtils;
+import atmani.wrapper.ProductWrapper;
 
 @Service
 public class ProductServiceIMP implements ProductService {
@@ -85,6 +88,16 @@ public class ProductServiceIMP implements ProductService {
 		product.setCategory(category);
 		product.setPrice(Integer.parseInt(requestMap.get("price")));
 		return product;
+	}
+
+	@Override
+	public ResponseEntity<List<Object>> getAllProduct() {
+		try {
+			return new ResponseEntity<>(productDao.getAllProducts(), HttpStatus.OK);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
