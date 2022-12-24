@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 
 
@@ -30,6 +32,7 @@ public class Product implements Serializable {
 	@Column(name = "name")
 	private String name;
 	
+	@JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="category_fk", nullable = false)
 	private Category category;
