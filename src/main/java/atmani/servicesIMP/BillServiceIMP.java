@@ -1,7 +1,6 @@
 package atmani.servicesIMP;
 
 import java.io.FileOutputStream;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -57,9 +56,9 @@ public class BillServiceIMP implements BillService {
 					requestMap.put("uuid", fileName);
 					insertBill(requestMap);
 				}
-				String data = "Name: " + requestMap.get("name") + "\n" + "Contact Number"
-						+ requestMap.get("contactNumber") + "\n" + "Email" + requestMap.get("email") + "\n"
-						+ "Payment Method" + requestMap.get("paymentMethod");
+				String data = "Name: " + requestMap.get("name") + "\n" + "Contact Number: "
+						+ requestMap.get("contactNumber") + "\n" + "Email: " + requestMap.get("email") + "\n"
+						+ "Payment Method: " + requestMap.get("paymentMethod");
 
 				Document document = new Document();
 				PdfWriter.getInstance(document,
@@ -78,12 +77,19 @@ public class BillServiceIMP implements BillService {
 				PdfPTable table = new PdfPTable(5);
 				table.setWidthPercentage(100);
 				addTableHeader(table);
-				
-				JSONArray array = CafeUtils.getJsonDataFromString((String)requestMap.get("productDetail"));
+
+				JSONArray array = CafeUtils.getJsonDataFromString((String) requestMap.get("productDetail"));
 				for (int i = 0; i < array.length(); i++) {
 					addRows(table, CafeUtils.GetMapFromJson(array.getString(i)));
 				}
+				document.add(table);
 
+				Paragraph footer = new Paragraph(
+						"Total :" + requestMap.get("total") + "\n" + "Thank you for visiting. Please visit us again!",
+						getFont("Data"));
+				document.add(footer);
+				document.close();
+				return new ResponseEntity<>("{\"uuid\":\"" + fileName + "\"}", HttpStatus.OK);
 			} else {
 				return CafeUtils.getResponseEntity("Required data not found", HttpStatus.BAD_REQUEST);
 			}
@@ -94,9 +100,13 @@ public class BillServiceIMP implements BillService {
 		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	private void addRows(PdfPTable table, Map<String, Object> getMapFromJson) {
-		 // TODO Auto-generated method stub
-		
+	private void addRows(PdfPTable table, Map<String, Object> data) {
+		log.info("{inside addRows}");
+		table.addCell((String) data.get("name"));
+		table.addCell((String) data.get("category"));
+		table.addCell((String) data.get("quantity"));
+		table.addCell((Double.toString((Double) data.get("price"))));
+		table.addCell((Double.toString((Double) data.get("total"))));
 	}
 
 	private void addTableHeader(PdfPTable table) {
@@ -138,7 +148,7 @@ public class BillServiceIMP implements BillService {
 		rectangle.enableBorderSide(2);
 		rectangle.enableBorderSide(4);
 		rectangle.enableBorderSide(8);
-		rectangle.setBackgroundColor(BaseColor.BLACK);
+		rectangle.setBorderColor(BaseColor.BLACK);
 		rectangle.setBorderWidthRight(1);
 		document.add(rectangle);
 	}
