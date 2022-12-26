@@ -1,6 +1,8 @@
 package atmani.servicesIMP;
 
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -163,6 +165,7 @@ public class BillServiceIMP implements BillService {
 			bill.setContactNumber((String) requestMap.get("contactNumber"));
 			bill.setPaymentMethod((String) requestMap.get("paymentMethod"));
 			bill.setTotal(Integer.parseInt((String) requestMap.get("total")));
+			
 			bill.setProductDetail((String) requestMap.get("productDetail"));
 			billDao.save(bill);
 			bill.setCreatedBy(customerUsersDetailsService.getUserDetail().getName());
@@ -176,6 +179,18 @@ public class BillServiceIMP implements BillService {
 		return requestMap.containsKey("name") && requestMap.containsKey("contactNumber")
 				&& requestMap.containsKey("email") && requestMap.containsKey("paymentMethod")
 				&& requestMap.containsKey("productDetail") && requestMap.containsKey("total");
+	}
+
+	@Override
+	public ResponseEntity<List<Bill>> getBills() {
+		List<Bill> list = new ArrayList<>();
+		if (customerUsersDetailsService.getUserDetail().getRole().equals("admin")) {
+			list = billDao.getAllBills();
+		} else {
+			list = billDao.getAllBillsByUsername(customerUsersDetailsService.getUserDetail().getName())	;
+		}
+		return new ResponseEntity<>(list, HttpStatus.OK);
+
 	}
 
 }
