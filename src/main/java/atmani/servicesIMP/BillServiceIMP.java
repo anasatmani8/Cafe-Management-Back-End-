@@ -1,11 +1,15 @@
 package atmani.servicesIMP;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.apache.pdfbox.io.IOUtils;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,11 +55,14 @@ public class BillServiceIMP implements BillService {
 		try {
 			String fileName;
 			if (validateRequestMap(requestMap)) {
+				System.out.println("valide");
 				if (requestMap.containsKey("isGenerate") && !(Boolean) requestMap.get("isGenerate")) {
+					System.out.println("contains");
 					fileName = (String) requestMap.get("uuid");
 				} else {
 					fileName = CafeUtils.getUUID();
 					requestMap.put("uuid", fileName);
+					System.out.println("generate the new bill");
 					insertBill(requestMap);
 				}
 				String data = "Name: " + requestMap.get("name") + "\n" + "Contact Number: "
@@ -159,13 +166,13 @@ public class BillServiceIMP implements BillService {
 		try {
 			System.out.println(customerUsersDetailsService.getUserDetail().getName() + " username");
 			Bill bill = new Bill();
-			bill.setUuid((String) requestMap.get("uiid"));
+			bill.setUuid((String) requestMap.get("uuid"));
 			bill.setName((String) requestMap.get("name"));
 			bill.setEmail((String) requestMap.get("email"));
 			bill.setContactNumber((String) requestMap.get("contactNumber"));
 			bill.setPaymentMethod((String) requestMap.get("paymentMethod"));
 			bill.setTotal(Integer.parseInt((String) requestMap.get("total")));
-			
+
 			bill.setProductDetail((String) requestMap.get("productDetail"));
 			billDao.save(bill);
 			bill.setCreatedBy(customerUsersDetailsService.getUserDetail().getName());
@@ -183,14 +190,50 @@ public class BillServiceIMP implements BillService {
 
 	@Override
 	public ResponseEntity<List<Bill>> getBills() {
+		System.out.println(customerUsersDetailsService.getUserDetail().getName() + "--------------------------");
 		List<Bill> list = new ArrayList<>();
 		if (customerUsersDetailsService.getUserDetail().getRole().equals("admin")) {
 			list = billDao.getAllBills();
+			System.out.println(customerUsersDetailsService.getUserDetail().getName() + "--------------------------2");
 		} else {
-			list = billDao.getAllBillsByUsername(customerUsersDetailsService.getUserDetail().getName())	;
+			list = billDao.getAllBillsByUsername(customerUsersDetailsService.getUserDetail().getName());
 		}
 		return new ResponseEntity<>(list, HttpStatus.OK);
 
+	}
+
+	@Override
+	public ResponseEntity<byte[]> getPdf(Map<String, Object> requestMap) {
+		log.info("inside getPdf : requestMap{}", requestMap);
+		try {
+			byte[] byteArray = new byte[0];
+			if (!requestMap.containsKey("uuid") && validateRequestMap(requestMap)) {
+				return new ResponseEntity<>(byteArray, HttpStatus.BAD_REQUEST);
+			}
+			String filePath = CafeConstants.STORE_LOCATION + "\\" + (String) requestMap.get("uuid");
+			if (CafeUtils.isFileEist(filePath)) {
+				byteArray = getBytArray(filePath);
+				return new ResponseEntity<>(byteArray, HttpStatus.OK);
+			} else {
+				requestMap.put("isGenerate", false);
+				generateReport(requestMap);
+				byteArray = getBytArray(filePath);
+				return new ResponseEntity<>(byteArray, HttpStatus.OK);
+			}
+
+		} catch (Exception ex) {
+			
+		}
+		return null;
+	}
+
+	private byte[] getBytArray(String filePath) throws Exception {
+		// TODO Auto-generated method stub
+		File initialeFile = new File(filePath);
+		InputStream targetStream = new FileInputStream(initialeFile);
+		byte[] byteArray = IOUtils.toByteArray(targetStream);
+		targetStream.close();
+		return byteArray;
 	}
 
 }

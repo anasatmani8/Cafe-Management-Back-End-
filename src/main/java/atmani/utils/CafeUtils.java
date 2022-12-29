@@ -1,11 +1,14 @@
 package atmani.utils;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -13,6 +16,10 @@ import com.google.common.base.Strings;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
+import atmani.servicesIMP.UserServiceIMP;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CafeUtils {
 
 	private CafeUtils() {
@@ -41,5 +48,19 @@ public class CafeUtils {
 			}.getType());
 		}
 		return new HashMap<>();
+	}
+
+	public static Boolean isFileEist(String path) {
+		Logger log = (Logger) LoggerFactory.getLogger(UserServiceIMP.class);
+		System.out.println(path);
+		log.info("inside ifFileExxist", " path =>", path);
+		try {
+			File file = new File(path);
+			return (file != null && file.exists()) ? Boolean.TRUE : Boolean.FALSE;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return false;
 	}
 }
