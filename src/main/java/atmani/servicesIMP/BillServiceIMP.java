@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.pdfbox.io.IOUtils;
@@ -207,8 +208,9 @@ public class BillServiceIMP implements BillService {
 	@Override
 	public ResponseEntity<byte[]> getPdf(Map<String, Object> requestMap) {
 		log.info("inside getPdf : requestMap{}", requestMap);
+		byte[] byteArray = new byte[0];
 		try {
-			byte[] byteArray = new byte[0];
+			
 			System.out.println("1");
 			if (!requestMap.containsKey("uuid") && validateRequestMap(requestMap)) {
 				System.out.println("2");
@@ -224,13 +226,13 @@ public class BillServiceIMP implements BillService {
 				requestMap.put("isGenerate", false);
 				generateReport(requestMap);
 				byteArray = getBytArray(filePath);
-				return new ResponseEntity<>(byteArray, HttpStatus.OK);
+				return new ResponseEntity<>(byteArray, HttpStatus.ACCEPTED);
 			}
 
 		} catch (Exception ex) {
 			
 		}
-		return null;
+		return new ResponseEntity<>(byteArray, HttpStatus.OK);
 	}
 
 	private byte[] getBytArray(String filePath) throws Exception {
@@ -240,6 +242,22 @@ public class BillServiceIMP implements BillService {
 		byte[] byteArray = IOUtils.toByteArray(targetStream);
 		targetStream.close();
 		return byteArray;
+	} 
+
+	@Override
+	public ResponseEntity<String> deleteBill(Integer id) {
+		try {
+			Optional<?> optional = billDao.findById(id);
+			if (optional.isPresent()== true) {
+				billDao.deleteById(id);
+				return CafeUtils.getResponseEntity("Bill Deleted Successfully :)", HttpStatus.OK);
+			} else {
+				return CafeUtils.getResponseEntity("bill id not found :/", HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
