@@ -54,6 +54,7 @@ public class BillServiceIMP implements BillService {
 		log.info("inside the method which generate the report");
 		try {
 			String fileName;
+			System.out.println("1");
 			if (validateRequestMap(requestMap)) {
 				System.out.println("valide");
 				if (requestMap.containsKey("isGenerate") && !(Boolean) requestMap.get("isGenerate")) {
@@ -100,6 +101,7 @@ public class BillServiceIMP implements BillService {
 				document.close();
 				return new ResponseEntity<>("{\"uuid\":\"" + fileName + "\"}", HttpStatus.OK);
 			} else {
+				System.out.println("BAD_REQUEST");
 				return CafeUtils.getResponseEntity("Required data not found", HttpStatus.BAD_REQUEST);
 			}
 
@@ -207,14 +209,18 @@ public class BillServiceIMP implements BillService {
 		log.info("inside getPdf : requestMap{}", requestMap);
 		try {
 			byte[] byteArray = new byte[0];
+			System.out.println("1");
 			if (!requestMap.containsKey("uuid") && validateRequestMap(requestMap)) {
+				System.out.println("2");
 				return new ResponseEntity<>(byteArray, HttpStatus.BAD_REQUEST);
 			}
 			String filePath = CafeConstants.STORE_LOCATION + "\\" + (String) requestMap.get("uuid");
-			if (CafeUtils.isFileEist(filePath)) {
+			if (CafeUtils.isFileExist(filePath)) {
 				byteArray = getBytArray(filePath);
+				System.out.println("path =>"+filePath);
 				return new ResponseEntity<>(byteArray, HttpStatus.OK);
 			} else {
+				System.out.println("file doesn't exist");
 				requestMap.put("isGenerate", false);
 				generateReport(requestMap);
 				byteArray = getBytArray(filePath);

@@ -50,10 +50,10 @@ public class CafeUtils {
 		return new HashMap<>();
 	}
 
-	public static Boolean isFileEist(String path) {
+	public static Boolean isFileExist(String path) {
 		Logger log = (Logger) LoggerFactory.getLogger(UserServiceIMP.class);
 		System.out.println(path);
-		log.info("inside ifFileExxist", " path =>", path);
+		log.info("inside ifFileExist {}", path);
 		try {
 			File file = new File(path);
 			return (file != null && file.exists()) ? Boolean.TRUE : Boolean.FALSE;
