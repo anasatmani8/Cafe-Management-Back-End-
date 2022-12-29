@@ -248,6 +248,7 @@ public class BillServiceIMP implements BillService {
 	public ResponseEntity<String> deleteBill(Integer id) {
 		try {
 			Optional<?> optional = billDao.findById(id);
+			
 			if (optional.isPresent()== true) {
 				billDao.deleteById(id);
 				return CafeUtils.getResponseEntity("Bill Deleted Successfully :)", HttpStatus.OK);
