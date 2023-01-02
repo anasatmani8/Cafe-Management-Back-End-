@@ -65,6 +65,7 @@ public class UserServiceIMP implements UserService {
 					userDao.save(getUserFromMap(requestMap));
 					return CafeUtils.getResponseEntity("Successfully registred", HttpStatus.OK);
 				} else {
+					System.out.println("Already existing email");
 					return CafeUtils.getResponseEntity("Email already exits", HttpStatus.BAD_REQUEST);
 				}
 
