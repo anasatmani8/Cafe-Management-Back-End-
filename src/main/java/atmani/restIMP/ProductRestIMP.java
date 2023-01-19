@@ -54,6 +54,7 @@ public class ProductRestIMP implements ProductRest {
 	@Override
 	public ResponseEntity<String> deleteProduct(Integer id) {
 		try {
+			System.out.println("start2");
 			return productService.deleteProduct(id);
 		} catch (Exception ex) {
 			ex.printStackTrace();

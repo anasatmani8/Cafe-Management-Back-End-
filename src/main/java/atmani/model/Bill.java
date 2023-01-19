@@ -99,7 +99,7 @@ public class Bill implements Serializable {
 		return total;
 	}
 
-	public void setTotal(Integer total) {
+	public void setTotal(int total) {
 		this.total = total;
 	}
 
@@ -107,7 +107,7 @@ public class Bill implements Serializable {
 		return productDetail;
 	}
 
-	public void setProductDetail(String productDetail) {
+	public void setProductDetails(String productDetail) {
 		this.productDetail = productDetail;
 	}
 

@@ -14,7 +14,7 @@ public interface BillDao extends JpaRepository<Bill, Integer> {
 	@Query(value = "SELECT * FROM cafesystem.bill order by id desc", nativeQuery = true)
 	List<Bill> getAllBills();
 
-	@Query(value = "SELECT * FROM cafesystem.bill where createdby=:username order by id desc", nativeQuery = true)
+	@Query(value = "SELECT * FROM cafesystem.bill where email=:username order by id desc", nativeQuery = true)
 	List<Bill> getAllBillsByUsername(@Param("username") String name);
 
 }

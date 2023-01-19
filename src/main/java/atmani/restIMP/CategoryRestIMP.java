@@ -44,7 +44,8 @@ public class CategoryRestIMP implements CategoryRest {
 	@Override
 	public ResponseEntity<String> updateCategory(Map<String, String> requestMap) {
 		try {
-			return categoryService.updateCategery(requestMap);
+			System.out.println("rest imp");
+			return categoryService.updateCategory(requestMap);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

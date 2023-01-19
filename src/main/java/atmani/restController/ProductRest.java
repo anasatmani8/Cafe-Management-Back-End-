@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import atmani.model.Product;
 
-
-
 @RequestMapping(path = "/product")
 public interface ProductRest {
 	
@@ -26,7 +24,7 @@ public interface ProductRest {
 	@PostMapping(path="/update")
 	ResponseEntity<String> updateProduct(@RequestBody(required = true) Map<String, String> requrstMap);
 	
-	@PostMapping(path="/delete/{id}")
+	@GetMapping(path="/delete/{id}")
 	ResponseEntity<String> deleteProduct(@PathVariable Integer id);
 	
 	@PostMapping(path="/updateStatus")

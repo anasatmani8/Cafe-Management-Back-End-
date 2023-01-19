@@ -87,12 +87,14 @@ public class CategoryServiceIMP implements CategoryService {
 	public ResponseEntity<List<Category>> getAllCategory(String filterValue) {
 		try {
 
-			if (!Strings.isNullOrEmpty(filterValue)) {
+			if (!Strings.isNullOrEmpty(filterValue) && filterValue.equalsIgnoreCase("true")) {
 				log.info("param detected");
 				return new ResponseEntity<List<Category>>(categoryDao.getAllCategories(), HttpStatus.OK);
+			}else {
+				System.out.println("no paraam detected");
+				return new ResponseEntity<List<Category>>(categoryDao.findAll(), HttpStatus.OK);
 			}
-			log.info(" no param detected");
-			return new ResponseEntity<List<Category>>(categoryDao.findAll(), HttpStatus.OK);
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -100,12 +102,15 @@ public class CategoryServiceIMP implements CategoryService {
 	}
 
 	@Override
-	public ResponseEntity<String> updateCategery(Map<String, String> requestMap) {
+	public ResponseEntity<String> updateCategory(Map<String, String> requestMap) {
+		System.out.println("serv imp");
 		try {
+			System.out.println("1");
 			if (customerUsersDetailsService.getUserDetail().getRole().equalsIgnoreCase("admin")) {
+				System.out.println("2 => admin");
 				if (validateCategoryMap(requestMap, true)) {
 					Optional<?> optional = categoryDao.findById(Integer.parseInt(requestMap.get("id")));
-					System.out.println(optional);
+					System.out.println(Integer.parseInt(requestMap.get("id"))+""+optional);
 
 					if (optional.isPresent() == true) {
 						categoryDao.save(getCategoryMap(requestMap, true));
@@ -116,6 +121,7 @@ public class CategoryServiceIMP implements CategoryService {
 				}
 				return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA, HttpStatus.BAD_REQUEST);
 			} else {
+				System.out.println("unauthorized access");
 				return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
 			}
 		} catch (Exception ex) {

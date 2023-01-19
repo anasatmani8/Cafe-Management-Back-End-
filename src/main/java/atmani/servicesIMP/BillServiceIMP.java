@@ -174,9 +174,12 @@ public class BillServiceIMP implements BillService {
 			bill.setEmail((String) requestMap.get("email"));
 			bill.setContactNumber((String) requestMap.get("contactNumber"));
 			bill.setPaymentMethod((String) requestMap.get("paymentMethod"));
-			bill.setTotal(Integer.parseInt((String) requestMap.get("total")));
+			String t = (String) requestMap.get("total");
+			int total = (Integer.parseInt(t));
+			System.out.println(total);
+			bill.setTotal(total);
 
-			bill.setProductDetail((String) requestMap.get("productDetail"));
+			bill.setProductDetails((String) requestMap.get("productDetail"));
 			billDao.save(bill);
 			bill.setCreatedBy(customerUsersDetailsService.getUserDetail().getName());
 		} catch (Exception ex) {
@@ -186,6 +189,13 @@ public class BillServiceIMP implements BillService {
 	}
 
 	private boolean validateRequestMap(Map<String, Object> requestMap) {
+		System.out.println(requestMap.containsKey("name"));
+		System.out.println(requestMap.containsKey("contactNumber"));
+		System.out.println(requestMap.containsKey("product"));
+		System.out.println(requestMap.containsKey("email"));
+		System.out.println(requestMap.containsKey("total"));
+		System.out.println(requestMap.containsKey("paymentMethod"));
+
 		return requestMap.containsKey("name") && requestMap.containsKey("contactNumber")
 				&& requestMap.containsKey("email") && requestMap.containsKey("paymentMethod")
 				&& requestMap.containsKey("productDetail") && requestMap.containsKey("total");
@@ -197,9 +207,9 @@ public class BillServiceIMP implements BillService {
 		List<Bill> list = new ArrayList<>();
 		if (customerUsersDetailsService.getUserDetail().getRole().equals("admin")) {
 			list = billDao.getAllBills();
-			System.out.println(customerUsersDetailsService.getUserDetail().getName() + "--------------------------2");
+			System.out.println(customerUsersDetailsService.getUserDetail().getEmail() + "--------------------------2");
 		} else {
-			list = billDao.getAllBillsByUsername(customerUsersDetailsService.getUserDetail().getName());
+			list = billDao.getAllBillsByUsername(customerUsersDetailsService.getUserDetail().getEmail());
 		}
 		return new ResponseEntity<>(list, HttpStatus.OK);
 
@@ -210,8 +220,9 @@ public class BillServiceIMP implements BillService {
 		log.info("inside getPdf : requestMap{}", requestMap);
 		byte[] byteArray = new byte[0];
 		try {
-			
+
 			System.out.println("1");
+			System.out.println(requestMap + "data  ");
 			if (!requestMap.containsKey("uuid") && validateRequestMap(requestMap)) {
 				System.out.println("2");
 				return new ResponseEntity<>(byteArray, HttpStatus.BAD_REQUEST);
@@ -219,7 +230,7 @@ public class BillServiceIMP implements BillService {
 			String filePath = CafeConstants.STORE_LOCATION + "\\" + (String) requestMap.get("uuid");
 			if (CafeUtils.isFileExist(filePath)) {
 				byteArray = getBytArray(filePath);
-				System.out.println("path =>"+filePath);
+				System.out.println("path =>" + filePath);
 				return new ResponseEntity<>(byteArray, HttpStatus.OK);
 			} else {
 				System.out.println("file doesn't exist");
@@ -227,10 +238,10 @@ public class BillServiceIMP implements BillService {
 				generateReport(requestMap);
 				byteArray = getBytArray(filePath);
 				return new ResponseEntity<>(byteArray, HttpStatus.ACCEPTED);
-			}
 
+			}
 		} catch (Exception ex) {
-			
+
 		}
 		return new ResponseEntity<>(byteArray, HttpStatus.OK);
 	}
@@ -242,14 +253,16 @@ public class BillServiceIMP implements BillService {
 		byte[] byteArray = IOUtils.toByteArray(targetStream);
 		targetStream.close();
 		return byteArray;
-	} 
+	}
 
 	@Override
 	public ResponseEntity<String> deleteBill(Integer id) {
+		System.out.println(id);
 		try {
+			System.out.println(id);
 			Optional<?> optional = billDao.findById(id);
-			
-			if (optional.isPresent()== true) {
+
+			if (optional.isPresent() == true) {
 				billDao.deleteById(id);
 				return CafeUtils.getResponseEntity("Bill Deleted Successfully :)", HttpStatus.OK);
 			} else {

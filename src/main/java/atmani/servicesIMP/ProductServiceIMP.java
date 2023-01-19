@@ -128,10 +128,12 @@ public class ProductServiceIMP implements ProductService {
 
 	@Override
 	public ResponseEntity<String> deleteProduct(Integer id) {
+		System.out.println("start2");
 		try {
 			if (customerUsersDetailsService.getUserDetail().getRole().equalsIgnoreCase("admin")) {
 				Optional<Product> optional = productDao.findById(id);
 				if (optional.isPresent() == true) {
+					System.out.println("prod found");
 					productDao.deleteById(id);
 					return CafeUtils.getResponseEntity("Product deleted successfully", HttpStatus.OK);
 				} else {
