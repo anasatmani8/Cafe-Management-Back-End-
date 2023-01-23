@@ -25,6 +25,19 @@ public class Category implements Serializable {
 
 	@Column(name = "name")
 	private String name;
+	
+	@Column(name = "image")
+	private String image;
+	
+	
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public Integer getId() {
 		return id;

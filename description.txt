@@ -1,0 +1,26 @@
+ I am excited to announce the launch of my latest project, a restaurant
+    website that is designed to elevate the online ordering experience. The
+    website features a sleek Angular frontend that provides an easy-to-use
+    interface for customers to place orders, and a robust Spring Boot backend,
+    JWT security and MySQL/Spring Data for database that ensures security and
+    reliability. The website also offers an admin interface that allows
+    restaurant staff to manage dishes, orders, and bills with ease. I am proud
+    of this project and I can't wait for you to try it out. Don't hesitate to
+    visit the website and experience the smoothness and efficiency of this new
+    way of ordering food.
+ 
+///
+
+I am thrilled to share my latest project, a cutting-edge
+ restaurant website that seamlessly blends beautiful 
+design and advanced technology. Built using Angular for 
+the frontend, Spring Boot for the backend, JWT for 
+security and MySQL/Spring Data for database, this website
+ offers an unparalleled ordering experience for customers.
+ The menu is presented in a visually appealing way and 
+the ordering process is intuitive and user-friendly. 
+Additionally, the website offers an admin interface that
+ allows restaurant staff to efficiently manage dishes, 
+orders, and bills. I am proud of this project and I 
+invite you to visit the website and experience the 
+future of online ordering for yourself.

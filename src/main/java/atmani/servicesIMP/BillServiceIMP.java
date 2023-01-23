@@ -191,7 +191,7 @@ public class BillServiceIMP implements BillService {
 	private boolean validateRequestMap(Map<String, Object> requestMap) {
 		System.out.println(requestMap.containsKey("name"));
 		System.out.println(requestMap.containsKey("contactNumber"));
-		System.out.println(requestMap.containsKey("product"));
+		System.out.println(requestMap.containsKey("productDetail"));
 		System.out.println(requestMap.containsKey("email"));
 		System.out.println(requestMap.containsKey("total"));
 		System.out.println(requestMap.containsKey("paymentMethod"));
