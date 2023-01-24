@@ -92,4 +92,14 @@ public class ProductRestIMP implements ProductRest {
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@Override
+	public ResponseEntity<List<String>> getIdProductByCat(Integer id) {
+		try {
+			return productService.getIdProductByCat(id);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 }

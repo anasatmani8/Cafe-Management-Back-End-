@@ -24,5 +24,7 @@ public interface ProductService {
 	ResponseEntity<List<Product>> getProdsByCategory(Integer id);
 
 	ResponseEntity<List<Product>> getProdsById(Integer id);
+	
+	ResponseEntity<List<String>> getIdProductByCat(Integer id);
 
 }

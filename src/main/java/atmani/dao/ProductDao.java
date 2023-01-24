@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import atmani.model.Product;
-
+ //SELECT id FROM cafesystem.product where category_fk=1;
 @Repository
 @Transactional
 public interface ProductDao extends JpaRepository<Product, Integer> {
@@ -29,4 +29,7 @@ public interface ProductDao extends JpaRepository<Product, Integer> {
 
 	@Query(value = "SELECT * FROM cafesystem.product p  where p.id=:id", nativeQuery = true)
 	List<Product> getProdsById(@Param("id") int id);
+	
+	@Query(value = "SELECT id FROM cafesystem.product where category_fk=:id;", nativeQuery = true)
+	List<String> getIdProdsByCat(@Param("id") int id);
 }

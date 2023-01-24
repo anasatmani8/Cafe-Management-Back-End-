@@ -187,4 +187,14 @@ public class ProductServiceIMP implements ProductService {
 		}
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+	@Override
+	public ResponseEntity<List<String>> getIdProductByCat(Integer id) {
+		try {
+			return new ResponseEntity<List<String>>(productDao.getIdProdsByCat(id), HttpStatus.OK);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }
