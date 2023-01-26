@@ -43,7 +43,10 @@ public class Product implements Serializable {
 	@Column(name = "price")
 	private Integer price;
 	
-	@Column(name = "status")
+	@Column(name = "image")
+	private String image;
+	
+	@Column(name = "status", columnDefinition = "BLOB")
 	private String status;
 
 	public Integer getId() {
@@ -56,6 +59,15 @@ public class Product implements Serializable {
 
 	public String getName() {
 		return name;
+	}
+	
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String bs) {
+		this.image = bs;
 	}
 
 	public void setName(String name) {

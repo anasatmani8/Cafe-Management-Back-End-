@@ -1,6 +1,9 @@
 package atmani.servicesIMP;
 
+
+import java.io.IOException;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import atmani.JWT.CustomerUsersDetailsService;
 import atmani.JWT.JwtFilter;
@@ -84,6 +89,12 @@ public class ProductServiceIMP implements ProductService {
 			product.setStatus("true");
 		}
 		product.setName(requestMap.get("name"));
+		System.out.println(requestMap.get("file")+"//////////////////////");
+		
+		product.setImage(requestMap.get("file"));
+		
+		
+		
 		product.setDescription(requestMap.get("description"));
 		product.setCategory(category);
 		product.setPrice(Integer.parseInt(requestMap.get("price")));
@@ -100,14 +111,14 @@ public class ProductServiceIMP implements ProductService {
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@Override
-	public ResponseEntity<String> updateProduct(Map<String, String> requrstMap) {
+/*	@Override
+	public ResponseEntity<String> updateProduct(Map<String, String> requrstMap, MultipartFile[] file) {
 		try {
 			if (customerUsersDetailsService.getUserDetail().getRole().equalsIgnoreCase("admin")) {
 				if (validateProductMap(requrstMap, true)) {
 					Optional<Product> product = productDao.findById(Integer.parseInt(requrstMap.get(("id"))));
 					if (product.isPresent() == true) {
-						Product productN = getProductMap(requrstMap, true);
+						Product productN = getProductMap(requrstMap, true, file);
 						productN.setStatus(product.get().getStatus());
 						productDao.save(productN);
 						return CafeUtils.getResponseEntity("Product Updated Successfuly", HttpStatus.OK);
@@ -124,7 +135,7 @@ public class ProductServiceIMP implements ProductService {
 			ex.printStackTrace();
 		}
 		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
+	}*/
 
 	@Override
 	public ResponseEntity<String> deleteProduct(Integer id) {

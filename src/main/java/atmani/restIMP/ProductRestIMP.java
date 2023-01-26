@@ -7,7 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import atmani.constents.CafeConstants;
 import atmani.model.Product;
@@ -37,20 +39,20 @@ public class ProductRestIMP implements ProductRest {
 			return productService.getAllProduct();
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		}
+		} 
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@Override
-	public ResponseEntity<String> updateProduct(Map<String, String> requrstMap) {
+	/*@Override
+	public ResponseEntity<String> updateProduct(Map<String, String> requrstMap, MultipartFile file) {
 		try {
-			return productService.updateProduct(requrstMap);
+			return productService.updateProduct(requrstMap, file);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
+*/
 	@Override
 	public ResponseEntity<String> deleteProduct(Integer id) {
 		try {
@@ -101,5 +103,7 @@ public class ProductRestIMP implements ProductRest {
 		}
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+
+	
 
 }

@@ -16,7 +16,7 @@ import atmani.model.Product;
 @Transactional
 public interface ProductDao extends JpaRepository<Product, Integer> {
 
-	@Query(value = "SELECT p.id, p.name, p.description, p.price, p.status, p.category_fk FROM cafesystem.product p , cafesystem.category c where p.category_fk=c.id\r\n"
+	@Query(value = "SELECT * FROM cafesystem.product p , cafesystem.category c where p.category_fk=c.id\r\n"
 			+ "", nativeQuery = true)
 	List<Product> getAllProducts();
 
@@ -30,6 +30,6 @@ public interface ProductDao extends JpaRepository<Product, Integer> {
 	@Query(value = "SELECT * FROM cafesystem.product p  where p.id=:id", nativeQuery = true)
 	List<Product> getProdsById(@Param("id") int id);
 	
-	@Query(value = "SELECT id FROM cafesystem.product where category_fk=:id;", nativeQuery = true)
+	@Query(value = "SELECT id FROM cafesystem.product where category_fk=:id", nativeQuery = true)
 	List<String> getIdProdsByCat(@Param("id") int id);
 }
