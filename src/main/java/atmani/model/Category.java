@@ -31,6 +31,11 @@ public class Category implements Serializable {
 	
 	
 
+	@Override
+	public String toString() {
+		return "Category [id=" + id + ", name=" + name + ", image=" + image + "]";
+	}
+
 	public String getImage() {
 		return image;
 	}

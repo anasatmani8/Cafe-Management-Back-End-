@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import atmani.model.Product;
 
@@ -17,7 +15,7 @@ public interface ProductService {
 
 	ResponseEntity<List<Product>> getAllProduct();
 
-	//ResponseEntity<String> updateProduct(Map<String, String> requrstMap, MultipartFile file);
+	ResponseEntity<String> updateProduct(Map<String, String> requrstMap);
 
 	ResponseEntity<String> deleteProduct(Integer id);
 

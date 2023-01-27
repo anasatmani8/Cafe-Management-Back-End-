@@ -24,6 +24,11 @@ public interface ProductDao extends JpaRepository<Product, Integer> {
 	@Query(value = "UPDATE Product p SET p.status =:status WHERE p.id =:id", nativeQuery = true)
 	Integer updateStatus(@Param("status") String status, @Param("id") int id);
 
+	@Modifying
+	@Query(value = "UPDATE cafesystem.product SET description =:des, name =:name, price =:price, category_fk =:catId WHERE id =:id", nativeQuery = true)
+	Integer updateProd(@Param("des") String des,@Param("name") String name,@Param("price") int price,@Param("catId") int idC, @Param("id") int id);
+	
+
 	@Query(value = "SELECT * FROM cafesystem.product p  where p.category_fk=:id and p.status='true'", nativeQuery = true)
 	List<Product> getProdsByCat(@Param("id") int id);
 

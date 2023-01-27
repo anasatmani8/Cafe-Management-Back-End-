@@ -1,6 +1,5 @@
 package atmani.servicesIMP;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -89,12 +88,10 @@ public class ProductServiceIMP implements ProductService {
 			product.setStatus("true");
 		}
 		product.setName(requestMap.get("name"));
-		System.out.println(requestMap.get("file")+"//////////////////////");
-		
+		System.out.println(requestMap.get("file") + "//////////////////////");
+
 		product.setImage(requestMap.get("file"));
-		
-		
-		
+
 		product.setDescription(requestMap.get("description"));
 		product.setCategory(category);
 		product.setPrice(Integer.parseInt(requestMap.get("price")));
@@ -111,16 +108,26 @@ public class ProductServiceIMP implements ProductService {
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-/*	@Override
-	public ResponseEntity<String> updateProduct(Map<String, String> requrstMap, MultipartFile[] file) {
+	@Override
+	public ResponseEntity<String> updateProduct(Map<String, String> requrstMap) {
 		try {
 			if (customerUsersDetailsService.getUserDetail().getRole().equalsIgnoreCase("admin")) {
 				if (validateProductMap(requrstMap, true)) {
 					Optional<Product> product = productDao.findById(Integer.parseInt(requrstMap.get(("id"))));
 					if (product.isPresent() == true) {
-						Product productN = getProductMap(requrstMap, true, file);
+						Product productN = getProductMap(requrstMap, true);
 						productN.setStatus(product.get().getStatus());
-						productDao.save(productN);
+						System.out.println(productN.toString());
+						System.out.println(productN.getImage() + "image/update");
+						if (productN.getImage() == null) {
+							System.out.println("image doesn't exist");
+							productDao.updateProd(productN.getDescription(), productN.getName(), productN.getPrice(),
+									productN.getCategory().getId(), productN.getId());
+						} else {
+							productDao.save(productN);
+							System.out.println("image exist");
+						}
+
 						return CafeUtils.getResponseEntity("Product Updated Successfuly", HttpStatus.OK);
 					} else {
 						return CafeUtils.getResponseEntity("Product not found :/", HttpStatus.OK);
@@ -135,7 +142,7 @@ public class ProductServiceIMP implements ProductService {
 			ex.printStackTrace();
 		}
 		return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
-	}*/
+	}
 
 	@Override
 	public ResponseEntity<String> deleteProduct(Integer id) {

@@ -105,6 +105,36 @@ public class Product implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public Product(String name, Category category, String description, Integer price, String image, String status) {
+		super();
+		this.name = name;
+		this.category = category;
+		this.description = description;
+		this.price = price;
+		this.image = image;
+		this.status = status;
+	}
+
+	public Product(String name, Category category, String description, Integer price, String status) {
+		super();
+		this.name = name;
+		this.category = category;
+		this.description = description;
+		this.price = price;
+		this.status = status;
+	}
+
+	public Product() {
+		super();
+	}
+
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", name=" + name + ", category=" + category + ", description=" + description
+				+ ", price=" + price + ", image=" + image + ", status=" + status + "]";
+	}
+	
 	
 	
 }
