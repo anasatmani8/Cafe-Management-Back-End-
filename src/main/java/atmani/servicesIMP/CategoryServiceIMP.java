@@ -79,6 +79,8 @@ public class CategoryServiceIMP implements CategoryService {
 			category.setId(Integer.parseInt(requestMap.get("id")));
 		}
 		category.setName(requestMap.get("name"));
+		category.setImage(requestMap.get("file") );
+		System.out.println(requestMap.get("file") +" file from getCat");
 		System.out.println(requestMap.get("name"));
 		return category;
 	}
@@ -101,6 +103,7 @@ public class CategoryServiceIMP implements CategoryService {
 		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	
 	@Override
 	public ResponseEntity<String> updateCategory(Map<String, String> requestMap) {
 		System.out.println("serv imp");
@@ -113,7 +116,17 @@ public class CategoryServiceIMP implements CategoryService {
 					System.out.println(Integer.parseInt(requestMap.get("id"))+""+optional);
 
 					if (optional.isPresent() == true) {
+						Category cat = getCategoryMap(requestMap, true);
+						System.out.println(cat.getImage()+"image");
+						if (cat.getImage() == null) {
+							categoryDao.updateCat(cat.getName(), cat.getId());
+							System.out.println("image doesn't exist");
+						} else {
+							System.out.println(cat.getImage()+" image");
 						categoryDao.save(getCategoryMap(requestMap, true));
+						System.out.println("image exist");
+						}
+						
 						return CafeUtils.getResponseEntity("Category updatde successfuly", HttpStatus.OK);
 					} else {
 						return CafeUtils.getResponseEntity("Category not found :/", HttpStatus.OK);

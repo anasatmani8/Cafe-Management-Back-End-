@@ -46,7 +46,7 @@ public class Product implements Serializable {
 	@Column(name = "image")
 	private String image;
 	
-	@Column(name = "status", columnDefinition = "BLOB")
+	@Column(name = "status")
 	private String status;
 
 	public Integer getId() {
