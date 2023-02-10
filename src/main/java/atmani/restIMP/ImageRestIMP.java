@@ -16,13 +16,13 @@ import atmani.utils.CafeUtils;
 
 @RestController
 @CrossOrigin("*")
-public class ImageRestIMP implements ImageRest {
+public class ImageRestIMP  {
 	
 	@Autowired
 	ImageService imageService;
 
-	@Override
-	public ResponseEntity<String> addImage(Map<String, String> requestMap, MultipartFile file) {
+	
+	public ResponseEntity<String> addIdmage(Map<String, String> requestMap, MultipartFile file) {
 		try {
 			return imageService.addImage(requestMap, file);
 		} catch (Exception ex) {
